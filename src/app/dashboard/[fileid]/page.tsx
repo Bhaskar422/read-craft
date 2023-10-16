@@ -6,22 +6,22 @@ import { notFound, redirect } from "next/navigation";
 
 interface PageProps {
   params: {
-    fileId: string;
+    fileid: string;
   };
 }
 
 const Page = async ({ params }: PageProps) => {
-  const { fileId } = params;
+  const { fileid } = params;
 
   const { getUser } = getKindeServerSession();
   const user = getUser();
 
-  if (!user || !user.id) redirect(`/auth-callback?origin=dashboard/${fileId}`);
+  if (!user || !user.id) redirect(`/auth-callback?origin=dashboard/${fileid}`);
 
   // make db call
   const file = await db.file.findFirst({
     where: {
-      id: fileId,
+      id: fileid,
       userId: user.id,
     },
   });
