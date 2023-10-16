@@ -9,6 +9,17 @@ import { NextRequest } from "next/server";
 
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
+interface SearchResult {
+  pageContent: string;
+  metadata: {
+    fileName: string;
+  };
+}
+
+function customFilter(result: SearchResult, targetFileName: string): boolean {
+  return result.metadata?.fileName === targetFileName;
+}
+
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
 
@@ -51,7 +62,10 @@ export const POST = async (req: NextRequest) => {
     pineconeIndex,
   });
 
-  const results = await vectorStore.similaritySearch(message, 4);
+  // const results = await vectorStore.similaritySearch(message, 4);
+  const results = await vectorStore.similaritySearch(message, 1, {
+    filter: (result: SearchResult) => customFilter(result, file.id),
+  });
 
   const prevMessages = await db.message.findMany({
     where: {
