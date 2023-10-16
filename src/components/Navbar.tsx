@@ -65,7 +65,6 @@ const Navbar: FC<NavbarProps> = ({}) => {
                   Dashboard
                 </Link>
 
-                {/* @ts-expect-error Async Server Component */}
                 <UserAccountNav
                   name={
                     !user.given_name || !user.family_name
